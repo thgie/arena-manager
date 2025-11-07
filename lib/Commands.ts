@@ -123,12 +123,11 @@ export default class Commands {
 				.then(async (blocks) => {
 					for (const block of blocks) {
 						if (
-							block.class === "Channel" ||
-							block.class === "Media"
+							block.class === "Channel"
 						) {
 							continue;
 						}
-						const fileName = block.generated_title
+						let fileName = block.generated_title
 							? block.generated_title
 							: block.title;
 
@@ -146,6 +145,25 @@ export default class Commands {
 						if (block.class === "Image" || block.class === "Link") {
 							const imageUrl = block.image?.display.url;
 							content = `![](${imageUrl})`;
+						}
+
+						// Hack for Youtube Embeds, might work for others as well
+						if (block.class === "Media") {
+							let mediaUrl = block.embed?.html;
+							fileName = block.source.title;
+							content = `${mediaUrl}`;
+						}
+
+						// Fix for long file names
+						const maxLength = 255;
+						const pathLength = `${this.settings.folder}/${slug}`.length;
+						
+						if(pathLength + fileName.length >= maxLength) {
+							let extIndex = fileName.lastIndexOf('.');
+							let name = extIndex === -1 ? fileName : fileName.substring(0, extIndex);
+							let extension = extIndex === -1 ? '' : fileName.substring(extIndex);
+
+							fileName = name.substring(0, maxLength - extension.length - pathLength) + extension;
 						}
 
 						try {

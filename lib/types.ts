@@ -74,6 +74,18 @@ export interface Image {
 	thumb: URL;
 	updated_at: string;
 }
+export interface Embed {
+	url: URL;
+	type: string;
+	title: string;
+	author_name: string;
+	author_url: URL;
+	source_url: URL;
+	thumbnail_url: URL;
+	width: Number;
+	height: Number;
+	html: string;
+}
 
 export interface Block {
 	user: User;
@@ -93,7 +105,7 @@ export interface Block {
 	created_at: string;
 	description: string;
 	description_html: string;
-	embed: string;
+	embed: Embed;
 	generated_title: string;
 	position: number;
 	slug: string;
